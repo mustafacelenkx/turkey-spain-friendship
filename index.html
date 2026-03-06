@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta property="og:title" content="🇹🇷🤝🇪🇸 Türkiye – İspanya Dostluk Duvarı" />
+  <meta property="og:description" content="Türkler ve İspanyollar internette buluşuyor. Testi dene!" />
+  <title>🇹🇷🤝🇪🇸 Türkiye – İspanya Dostluk Duvarı</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <div class="floating-flags" id="floatingFlags"></div>
+
+  <!-- ===== LOGIN MODAL (returning users) ===== -->
+  <div class="modal-overlay hidden" id="loginModal">
+    <div class="modal-card glass">
+      <button class="modal-close" id="modalClose" aria-label="Kapat">✕</button>
+      <h3 class="modal-title">🔑 Giriş Yap <span class="modal-sep">/</span> Iniciar sesión</h3>
+      <input type="text"     id="modalUsername" class="form-input" placeholder="Kullanıcı adı / Nombre de usuario..." autocomplete="username"         maxlength="20" />
+      <input type="password" id="modalPassword" class="form-input" placeholder="Şifre / Contraseña..."               autocomplete="current-password" maxlength="64" />
+      <p class="auth-error hidden" id="modalError"></p>
+      <button class="btn-main" id="modalLoginBtn">Giriş Yap / Iniciar sesión →</button>
+    </div>
+  </div>
+
+  <!-- ===== 1. LANDING ===== -->
+  <section id="landing" class="section active">
+    <div class="hero-content glass">
+
+      <div class="flag-row">
+        <span class="big-flag">🇹🇷</span>
+        <span class="handshake">🤝</span>
+        <span class="big-flag">🇪🇸</span>
+      </div>
+
+      <h1 class="hero-title">
+        Türkiye – İspanya<br>
+        <span class="accent">İnternet Dostluğu</span>
+      </h1>
+
+      <p class="hero-sub">
+        Türkler ve İspanyollar internette buluşuyor.<br>
+        <em>Turcos y españoles se encuentran en internet.</em>
+      </p>
+
+      <div class="counters">
+        <div class="counter-badge tr">🇹🇷 <span id="trCount">0</span></div>
+        <div class="counter-badge es">🇪🇸 <span id="esCount">0</span></div>
+      </div>
+
+      <p class="select-prompt">Sen kimsin? &nbsp;/&nbsp; ¿Quién eres?</p>
+
+      <div class="nationality-btns">
+        <button class="nat-btn tr-btn" id="selectTr">
+          <span class="nat-flag">🇹🇷</span>
+          <span class="nat-label">Türküm</span>
+          <span class="nat-sub">Quiz → Kayıt → Duvar</span>
+        </button>
+        <button class="nat-btn es-btn" id="selectEs">
+          <span class="nat-flag">🇪🇸</span>
+          <span class="nat-label">Soy español/a</span>
+          <span class="nat-sub">Quiz → Registro → Muro</span>
+        </button>
+      </div>
+
+      <button class="btn-login-link" id="showLoginModal">
+        🔑 Zaten hesabım var &nbsp;/&nbsp; Ya tengo cuenta
+      </button>
+
+    </div>
+  </section>
+
+  <!-- ===== 2. QUIZ ===== -->
+  <section id="quiz" class="section">
+    <div class="quiz-container glass">
+      <h2 class="quiz-title" id="quizTitle"></h2>
+      <div class="quiz-progress">
+        <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+        <span id="questionLabel"></span>
+      </div>
+      <div id="questionBlock" class="question-block"></div>
+    </div>
+  </section>
+
+  <!-- ===== 3. SONUÇ ===== -->
+  <section id="result" class="section">
+    <div class="result-container glass">
+      <div class="result-flag" id="resultFlag"></div>
+      <h2 class="result-title" id="resultTitle"></h2>
+      <div class="result-bar-wrap">
+        <div class="result-bar" id="resultBar"></div>
+      </div>
+      <p class="result-sub" id="resultSub"></p>
+      <div class="result-actions">
+        <button class="btn-share" id="shareBtn"></button>
+        <button class="btn-main"  id="enterAuthBtn"></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 4. AUTH (Kayıt / Giriş) ===== -->
+  <section id="auth" class="section">
+    <div class="auth-card glass">
+
+      <div class="auth-result-hint" id="authHint"></div>
+
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="tabRegister" onclick="switchAuthTab('register')"></button>
+        <button class="auth-tab"        id="tabLogin"    onclick="switchAuthTab('login')"></button>
+      </div>
+
+      <!-- Register pane -->
+      <div id="paneRegister">
+        <input type="text"     id="regUsername" class="form-input" autocomplete="username"         maxlength="20" />
+        <input type="password" id="regPassword" class="form-input" autocomplete="new-password"     maxlength="64" />
+        <input type="password" id="regConfirm"  class="form-input" autocomplete="new-password"     maxlength="64" />
+        <p class="auth-error hidden" id="regError"></p>
+        <button class="btn-main" id="registerBtn"></button>
+      </div>
+
+      <!-- Login pane -->
+      <div id="paneLogin" class="hidden">
+        <input type="text"     id="logUsername" class="form-input" autocomplete="username"         maxlength="20" />
+        <input type="password" id="logPassword" class="form-input" autocomplete="current-password" maxlength="64" />
+        <p class="auth-error hidden" id="logError"></p>
+        <button class="btn-main" id="loginBtn"></button>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===== 5. DOSTLUK DUVARI ===== -->
+  <section id="wall" class="section">
+
+    <div class="wall-header">
+      <h2 class="wall-title" id="wallTitle"></h2>
+      <div class="wall-meta">
+        <div class="counters inline">
+          <div class="counter-badge tr">🇹🇷 <span id="trCount2">0</span></div>
+          <div class="counter-badge es">🇪🇸 <span id="esCount2">0</span></div>
+        </div>
+        <div class="user-badge">
+          <span class="user-badge-name" id="userBadgeName"></span>
+          <button class="btn-logout" id="logoutBtn"></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="wall-form glass">
+      <div class="form-flag-row">
+        <span id="formFlag" class="form-flag"></span>
+        <span id="formNationality" class="form-nat"></span>
+      </div>
+      <textarea id="msgInput" class="form-input form-textarea" maxlength="150"></textarea>
+      <div class="post-footer">
+        <span class="daily-remaining" id="dailyRemaining"></span>
+        <button class="btn-main post-btn-narrow" id="postBtn"></button>
+      </div>
+    </div>
+
+    <div class="messages-grid" id="messagesGrid"></div>
+
+  </section>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="script.js"></script>
+</body>
+</html>
