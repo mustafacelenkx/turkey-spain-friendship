@@ -1,11 +1,13 @@
 /**
- * build.js — Vercel deploy sırasında çalışır
+ * build.js — Vercel deploy sırasında otomatik çalışır.
  *
- * Vercel dashboard'da şu environment variables'ları tanımla:
+ * Vercel Dashboard → Settings → Environment Variables'a ekle:
  *   SUPABASE_URL       → https://xxxx.supabase.co
  *   SUPABASE_ANON_KEY  → eyJhbGci...
  *
- * Vercel bu scripti çalıştırır ve config.js dosyasını oluşturur.
+ * Bu script iki şey yapar:
+ *  1. index.html içindeki null placeholder'ı gerçek değerlerle değiştirir.
+ *  2. config.js dosyasını oluşturur (belt & suspenders).
  */
 
 const fs  = require('fs');
@@ -21,11 +23,22 @@ if (!url || !key) {
   process.exit(1);
 }
 
-const content = `// Otomatik oluşturuldu — build.js tarafından. Düzenleme.
-window.SUPABASE_CONFIG = {
-  url: '${url}',
-  key: '${key}'
-};\n`;
+// 1. index.html içine değerleri göm
+const htmlPath    = 'index.html';
+const htmlContent = fs.readFileSync(htmlPath, 'utf8');
 
-fs.writeFileSync('config.js', content, 'utf8');
-console.log('✅  config.js başarıyla oluşturuldu.');
+const injected = `window.SUPABASE_CONFIG = { url: '${url}', key: '${key}' };`;
+
+if (!htmlContent.includes('window.SUPABASE_CONFIG = null;')) {
+  console.error('❌  index.html içinde placeholder bulunamadı.');
+  process.exit(1);
+}
+
+const updatedHtml = htmlContent.replace('window.SUPABASE_CONFIG = null;', injected);
+fs.writeFileSync(htmlPath, updatedHtml, 'utf8');
+console.log('✅  index.html güncellendi (SUPABASE_CONFIG enjekte edildi).');
+
+// 2. config.js oluştur (yerel geliştirme + fallback)
+const configContent = `// Otomatik oluşturuldu — build.js tarafından.\nwindow.SUPABASE_CONFIG = { url: '${url}', key: '${key}' };\n`;
+fs.writeFileSync('config.js', configContent, 'utf8');
+console.log('✅  config.js oluşturuldu.');

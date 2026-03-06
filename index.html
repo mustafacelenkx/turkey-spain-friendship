@@ -163,6 +163,10 @@
 
   </section>
 
+  <!-- Supabase config: Vercel'de build.js enjekte eder, yerelde config.js yükler -->
+  <script id="supabase-config">window.SUPABASE_CONFIG = null;</script>
+  <script src="config.js" onerror="void(0)"></script>
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="script.js"></script>
 </body>
