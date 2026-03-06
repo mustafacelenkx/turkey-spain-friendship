@@ -1,0 +1,13 @@
+# Supabase anahtarları — asla GitHub'a gitmesin
+config.js
+
+# OS dosyaları
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+
+# Node (build scripti için)
+node_modules/

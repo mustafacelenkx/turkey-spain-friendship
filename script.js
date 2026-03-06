@@ -4,10 +4,31 @@
 
 // ============================================================
 //  ⚙️  SUPABASE YAPILANDIRMASI
-//  supabase.com → Projen → Settings → API bölümünden alırsın
+//  Değerler config.js dosyasından okunur (gitignore'da).
+//  Yerel geliştirme : cp config.example.js config.js → değerleri gir
+//  Vercel deploy    : build.js environment variables'tan otomatik üretir
 // ============================================================
-const SUPABASE_URL  = 'https://dshsmriajcwylvdqoznb.supabase.co';
-const SUPABASE_ANON = 'sb_publishable_016P4TukzFbsHeVue2SYTA_lqt7ZYdY';
+if (!window.SUPABASE_CONFIG?.url || window.SUPABASE_CONFIG.url.includes('YOUR_PROJECT')) {
+  document.body.innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:center;min-height:100vh;
+                font-family:sans-serif;background:#0d0d1a;color:#ff2d55;text-align:center;padding:2rem;">
+      <div>
+        <div style="font-size:3rem;margin-bottom:1rem">⚙️</div>
+        <h2 style="margin-bottom:.5rem">config.js bulunamadı veya yapılandırılmamış</h2>
+        <p style="color:#a0a0b8;margin-top:1rem;line-height:1.6">
+          Terminalde şunu çalıştır:<br>
+          <code style="background:#1a1a2e;padding:.3rem .7rem;border-radius:6px">
+            cp config.example.js config.js
+          </code><br><br>
+          Sonra <strong>config.js</strong> içine Supabase bilgilerini gir.
+        </p>
+      </div>
+    </div>`;
+  throw new Error('config.js eksik veya yapılandırılmamış');
+}
+
+const SUPABASE_URL  = window.SUPABASE_CONFIG.url;
+const SUPABASE_ANON = window.SUPABASE_CONFIG.key;
 
 const { createClient } = supabase;
 const db = createClient(SUPABASE_URL, SUPABASE_ANON);
